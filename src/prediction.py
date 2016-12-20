@@ -1,12 +1,21 @@
 #!/usr/bin/python3
 from keras.models import load_model
 from keras.preprocessing import sequence
-from keras.preprocessing.text import one_hot
+from keras.preprocessing.text import text_to_word_sequence
 
 def no_filter():
     f = '\t\n'
     return f
 
+def one_hot(text, n, filters, lower = True, split = " "):
+    sequence = text_to_word_sequence(text, filters, lower, split)
+    bytes_seq = []
+    for x in sequence:
+        bytes_seq.append(x.encode('utf-8'))
+    int_seq = []
+    for x in bytes_seq:
+        int_seq.append(int.from_bytes(x, byteorder='big') % n)
+    return int_seq
 
 def no_of_words_in_data(x_train):
     word_set = set()
@@ -32,7 +41,7 @@ def load_dataset(path, interp = True):
     f.close()
     return x_train, y_train
 
-x_train, y_train = load_dataset('/home/ktagowski/Downloads/gdl/data/korpus/train/', interp = True)
+x_train, y_train = load_dataset('../data/korpus/train/', interp = True)
 num_words = 92891
 
 model = load_model('test2.h5')
@@ -51,7 +60,7 @@ wocab = [
             'Punctuation (also used for the Sentence Boundary token)'
          ]
 x = range(1,13)
-y = ['','A','C','D','I','J','N','P','V','R','T','X','Z']
+y = ['0','A','C','D','I','J','N','P','V','R','T','X','Z']
 map = dict(zip(x, wocab))
 #sentence = input("Wpisz_zdanie\n")
 sentence = " konie z Krępy , odchodził o siódmej z minutami  "
@@ -61,6 +70,7 @@ print(x)
 ## = len(x)
 x = [x]
 x = sequence.pad_sequences(x, 10)
+#print(sentence)
 print(x)
 
 #y = x
@@ -75,6 +85,7 @@ for sent in predictions:
         predicted_idx.append(idx)
         print (sent[word])
 
+print(sentence)
 print (predicted_idx)
 for i in predicted_idx:
     print (str(i) + " " + map[i])

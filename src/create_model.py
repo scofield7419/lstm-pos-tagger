@@ -7,7 +7,7 @@ from keras.layers import Dense, Dropout, Activation, Embedding, LSTM, Input, Mer
 from keras.layers.wrappers import TimeDistributed, Bidirectional
 from keras.models import Model, Sequential
 from keras.preprocessing import sequence
-from keras.preprocessing.text import one_hot, base_filter
+from keras.preprocessing.text import text_to_word_sequence, base_filter
 from keras.utils import np_utils
 
 ### end of IMPORT SECTION ###
@@ -41,6 +41,16 @@ def no_of_words_in_data(x_train):
         for word in row.split(' '):
             word_set.add(word)
     return len(word_set)
+
+def one_hot(text, n, filters, lower = True, split = " "):
+    sequence = text_to_word_sequence(text, filters, lower, split)
+    bytes_seq = []
+    for x in sequence:
+        bytes_seq.append(x.encode('utf-8'))
+    int_seq = []
+    for x in bytes_seq:
+        int_seq.append(int.from_bytes(x, byteorder='big') % n)
+    return int_seq
 
 def convert_word_to_int(x_train, num_words, interp = True):
     x = []
