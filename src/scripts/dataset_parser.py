@@ -6,7 +6,7 @@ x = range(0,13)
 y = ['','A','C','D','I','J','N','P','V','R','T','X','Z']
 map = dict(zip(y, x))
 
-dir = '/home/ktagowski/Downloads/gdl/data/korpus/'
+dir = '../../data/korpus/'
 
 def parse_file(filename):
 
