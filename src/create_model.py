@@ -3,7 +3,7 @@
 ### IMPORT SECTION ###
 import numpy as np
 
-from keras.layers import Dense, Dropout, Activation, Embedding, LSTM, Input, Merge, ChainCRF, merge
+from keras.layers import Dense, Dropout, Activation, Embedding, LSTM, Input, Merge, merge
 from keras.layers.wrappers import TimeDistributed, Bidirectional
 from keras.models import Model, Sequential
 from keras.preprocessing import sequence
@@ -150,7 +150,7 @@ model.fit(x_train, y_train, batch_size = 256, nb_epoch = 10, validation_data = (
 score = model.evaluate(x_test, y_test)
 print(score)
 
-print(sentence)
+#print(sentence)
 
 
 model.save('test2.h5')
