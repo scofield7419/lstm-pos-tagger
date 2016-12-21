@@ -79,7 +79,7 @@ x_val, y_val = load_dataset("../data/korpus/validation/", interp = True)
 
 #num_words = 100 #TO DO - number of different words in dataset
 num_words = no_of_words_in_data(x_train)
-#num_words = num_words
+num_words = num_words * 3
 print ('num_of_word = ' + str(num_words))
 
 x_train, y_train = convert_dataset_to_int(x_train, y_train, num_words, interp = True)

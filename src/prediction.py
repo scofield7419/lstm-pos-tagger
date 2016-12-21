@@ -1,7 +1,13 @@
 #!/usr/bin/python3
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL']='1'
+
 from keras.models import load_model
 from keras.preprocessing import sequence
 from keras.preprocessing.text import text_to_word_sequence
+import numpy as np
+import sys
 
 def no_filter():
     f = '\t\n'
@@ -63,15 +69,17 @@ x = range(1,13)
 y = ['0','A','C','D','I','J','N','P','V','R','T','X','Z']
 map = dict(zip(x, wocab))
 #sentence = input("Wpisz_zdanie\n")
-sentence = " konie z Krępy , odchodził o siódmej z minutami  "
-
+sentence = input("Wpisz zdanie: ")
+model_sentence_length = 10
 x = one_hot(sentence, num_words, filters = no_filter())
-print(x)
+#print(x)
 ## = len(x)
+x=x[:model_sentence_length]
+sentence_length = abs(model_sentence_length - len(x))
 x = [x]
-x = sequence.pad_sequences(x, 10)
+x = sequence.pad_sequences(x, model_sentence_length)
 #print(sentence)
-print(x)
+#print(x)
 
 #y = x
 
@@ -80,12 +88,17 @@ predictions =  model.predict(x)
 predicted_idx = []
 for sent in predictions:
     for word in range(0,len(sent)):#len(sent)-x_len,len(sent)):
-        print (word)
+       # print (word)
         idx = sent[word].tolist().index(max(sent[word]))
         predicted_idx.append(idx)
-        print (sent[word])
+      #  print (sent[word])
 
-print(sentence)
-print (predicted_idx)
-for i in predicted_idx:
-    print (str(i) + " " + map[i])
+
+sent = sentence.split(' ')
+
+word_idx = 0
+if sent[word_idx] == ' ':
+    word_idx = word_idx+1
+for i in range(sentence_length, model_sentence_length):
+    print(sent[word_idx] + ' ' + str(predicted_idx[i]) + " " + map[predicted_idx[i]])
+    word_idx = word_idx + 1
