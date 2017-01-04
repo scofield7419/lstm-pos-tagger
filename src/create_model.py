@@ -3,7 +3,7 @@
 ### IMPORT SECTION ###
 import numpy as np
 
-from keras.layers import Dense, Dropout, Activation, Embedding, LSTM, Input, Merge, merge
+from keras.layers import Dense, Dropout, Activation, Embedding, LSTM, Input, Merge, merge, ChainCRF
 from keras.layers.wrappers import TimeDistributed, Bidirectional
 from keras.models import Model, Sequential
 from keras.preprocessing import sequence
@@ -87,7 +87,7 @@ x_test, y_test = convert_dataset_to_int(x_test, y_test, num_words, interp = True
 x_val, y_val = convert_dataset_to_int(x_val, y_val, num_words, interp = True)
 
 num_features = 32 #TO DO - how to know how much features we need. Hardcoded 3 for present time.
-seq_length = 10 #max([len(s) for s in x_train]) #maximum length of sentence
+seq_length = max([len(s) for s in x_train]) #maximum length of sentence
 print("Seq Length: " + str(seq_length))
 #print('DEBUG#seq_length:',seq_length)
 
@@ -129,23 +129,42 @@ out = TimeDistributed(Dense(no_cat+1, activation='softmax'))(hidden)
 ### Compile model graph
 
 model = Model(input=input_layer, output=out)
-'''
 
+
+
+'''
 ### MODEL Sequential
+
+
+'''
+CRF MODEL
 
 
 model = Sequential()
 model.add(Embedding(input_dim = num_words, input_shape = (seq_length,),output_dim = num_features, input_length = seq_length, mask_zero = False))
-model.add(Dropout(0.4))
+#model.add(Dropout(0.2))
 model.add(Bidirectional(LSTM(128, return_sequences=True)))
-model.add(Dropout(0.4))
+model.add(Dropout(0.2))
+model.add(TimeDistributed(Dense(no_cat+1)))
+model.add(Dropout(0.2))
+crf = ChainCRF()
+model.add(crf)
+model.compile(optimizer='adam', loss=crf.loss, metrics=['accuracy','precision','recall','fmeasure'])
+'''
+
+
+model = Sequential()
+model.add(Embedding(input_dim = num_words, input_shape = (seq_length,),output_dim = num_features, input_length = seq_length, mask_zero = False))
+model.add(Dropout(0.2))
+model.add(Bidirectional(LSTM(128, return_sequences=True)))
+model.add(Dropout(0.2))
 model.add(TimeDistributed(Dense(128, activation='tanh')))
+model.add(Dropout(0.2))
 model.add(TimeDistributed(Dense(no_cat+1, activation='softmax')))
-#crf = ChainCRF()
-#model.add(crf)
 
 
 
+#model.compile(optimizer='adam', loss=crf.loss, metrics=['accuracy','precision','recall','fmeasure'])
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy','precision','recall','fmeasure'])
 
 
@@ -153,7 +172,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 ### end of MODEL SECTION ###
 
 ### TRAINING SECTION ###t
-model.fit(x_train, y_train, batch_size = 256, nb_epoch = 10, validation_data = (x_val, y_val))
+model.fit(x_train, y_train, batch_size = 128, nb_epoch = 10, validation_data = (x_val, y_val))
 ### end of TRAINING SECTION ###
 
 ### PREDICTION SECTION ###

@@ -85,6 +85,7 @@ x = sequence.pad_sequences(x, model_sentence_length)
 
 predictions =  model.predict(x)
 
+
 predicted_idx = []
 for sent in predictions:
     for word in range(0,len(sent)):#len(sent)-x_len,len(sent)):
@@ -93,7 +94,7 @@ for sent in predictions:
         predicted_idx.append(idx)
       #  print (sent[word])
 
-
+print (predicted_idx)
 sent = sentence.split(' ')
 
 word_idx = 0
