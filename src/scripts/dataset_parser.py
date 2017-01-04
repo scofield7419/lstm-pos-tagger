@@ -89,4 +89,4 @@ def parse_file(filename,max_sentence_length,splitting = False):
 
 
 for file in filenames:
-    parse_file(file,max_sentence_length=35, splitting=True)
+    parse_file(file,max_sentence_length=40, splitting=True)
