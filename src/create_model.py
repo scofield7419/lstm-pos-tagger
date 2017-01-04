@@ -172,7 +172,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 ### end of MODEL SECTION ###
 
 ### TRAINING SECTION ###t
-model.fit(x_train, y_train, batch_size = 128, nb_epoch = 10, validation_data = (x_val, y_val))
+model.fit(x_train, y_train, batch_size = 512, nb_epoch = 10, validation_data = (x_val, y_val))
 ### end of TRAINING SECTION ###
 
 ### PREDICTION SECTION ###

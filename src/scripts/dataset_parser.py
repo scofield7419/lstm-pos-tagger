@@ -11,7 +11,20 @@ tags_map = dict(zip(y, x))
 
 dir = '../../data/korpus/'
 
-def parse_file(filename,max_sentence_length):
+
+def splitList(list, n_element):
+
+    list = np.array(list)
+    length = math.ceil(len(list) / float(n_element))
+    list = np.array_split(list,length)
+    res = []
+    for arr in list:
+        res.append(arr.tolist())
+        #print (arr.tolist())
+    return res
+
+def parse_file(filename,max_sentence_length,splitting = False):
+
     # = 11
     f = open(filename+".txt",'r')
     out_sentences = open(dir + filename + '/sentences.txt','w')
@@ -38,21 +51,16 @@ def parse_file(filename,max_sentence_length):
                     out_tags.write(' '.join(str(x) for x in tags) + "\n")
                     sentence_dict[len(words)] = sentence_dict[len(words)] + 1
                     count = count + 1
-                else:
-                    #splitowanie po n zdan
-                    '''
-                    print (len(words))
-                    nlen = math.ceil(len(words) / float(max_sentence_length))
-                    print (nlen)
-                    words = np.array(words)
-                    words = np.array_split(words,nlen)
-                    for arr in words:
-                        print (arr.tolist())
-                    '''
+                elif splitting:
+                    sentence_dict[len(words)] = sentence_dict[len(words)] + 1
+                    count = count + 1
 
-              #  if len(words) == 1:
-                 #   print(words)
-                 #   print(tags)
+                    words = splitList(words, max_sentence_length)
+                    tags = splitList(tags,max_sentence_length)
+
+                    for i in range(0,len(words)):
+                        out_sentences.write(" ".join(words[i]) + "\n")
+                        out_tags.write(' '.join(str(x) for x in tags[i]) + "\n")
 
             words = []
             tags = []
@@ -67,47 +75,9 @@ def parse_file(filename,max_sentence_length):
             pos_tag = tagged_word[2][0] #only first tag needed
             pos_tag = tags_map[pos_tag]
 
-            #print(word + " " + str(pos_tag))
-           # if len(tagged_word) > 3:
-            #    print (line)
-
             words.append(word)
             tags.append(pos_tag)
 
-
-
-        '''
-        #print line
-        string = line.split("\t")
-        word = string[0]
-        if string.__len__() > 1:
-            tag = string[2][0]
-            tag = map[tag]
-        else:
-            tag = ""
-       # print word + " " + str(tag);
-        #print string
-        if line=="\n":
-            if len(sentence) != 1 and len(sentence) < sentence_size+1:
-                print(sentence)
-                out_sentences.write(" ".join(sentence) + "\n")
-                out_tags.write(' '.join(str(x) for x in tags) + "\n")
-                sentence_dict[len(sentence)] = sentence_dict[len(sentence)] + 1
-                count = count+1
-            sentence = []
-            tags = []
-        else:
-            sentence.append(word)
-            tags.append(tag)
-
-      #  if len(sentence) > sentence_size:
-       #     out_sentences.write(" ".join(sentence) + "\n")
-       #     out_tags.write(' '.join(str(x) for x in tags) + "\n")
-       #     sentence_dict[len(sentence)] = sentence_dict[len(sentence)] + 1
-       #     count = count + 1
-       #     sentence = []
-        #    tags = []
-    '''
 
     print (sentence_dict)
     for key in sentence_dict:
@@ -119,7 +89,4 @@ def parse_file(filename,max_sentence_length):
 
 
 for file in filenames:
-    parse_file(file,max_sentence_length=5)
-
-#print " ".join(sentence)
-#print ' '.join(str(x) for x in tags)
+    parse_file(file,max_sentence_length=35, splitting=True)
