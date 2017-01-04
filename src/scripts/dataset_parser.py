@@ -119,7 +119,7 @@ def parse_file(filename,max_sentence_length):
 
 
 for file in filenames:
-    parse_file(file,max_sentence_length=10)
+    parse_file(file,max_sentence_length=5)
 
 #print " ".join(sentence)
 #print ' '.join(str(x) for x in tags)
