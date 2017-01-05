@@ -1,17 +1,13 @@
-Deep Learning Morphological Guesser (Currently only POS Tags)
+#DNN Morphological Guesser
 
-Model: BLSTM Network
+**Currently only POS Tagging**
 
-Implementation:
-Python: Keras + Numpy
+**Model**: BLSTM Network
 
-Scripts:
-scripts/dataset_parser - Converts and parse dataset
+**Implementation**: Python: Keras + Numpy
 
-Model:
-create_model.py
+**Scripts**: scripts/dataset_parser - Converts and parse dataset
 
-Prediction:
-prediction.py
+**Model**: create_model.py
 
-
+**Prediction**: prediction.py
