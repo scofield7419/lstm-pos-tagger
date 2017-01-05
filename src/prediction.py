@@ -47,7 +47,7 @@ def load_dataset(path, interp = True):
     f.close()
     return x_train, y_train
 
-x_train, y_train = load_dataset('../data/korpus/train/', interp = True)
+#x_train, y_train = load_dataset('../data/korpus/train/', interp = True)
 num_words = 361236
 
 model = load_model('test2.h5')
@@ -70,7 +70,7 @@ y = ['0','A','C','D','I','J','N','P','V','R','T','X','Z']
 map = dict(zip(x, wocab))
 #sentence = input("Wpisz_zdanie\n")
 sentence = input("Wpisz zdanie: ")
-model_sentence_length = 30
+model_sentence_length = 45
 x = one_hot(sentence, num_words, filters = no_filter())
 #print(x)
 ## = len(x)

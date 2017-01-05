@@ -51,9 +51,9 @@ def parse_file(filename,max_sentence_length,splitting = False):
                     out_tags.write(' '.join(str(x) for x in tags) + "\n")
                     sentence_dict[len(words)] = sentence_dict[len(words)] + 1
                     count = count + 1
+
+
                 elif splitting:
-                    sentence_dict[len(words)] = sentence_dict[len(words)] + 1
-                    count = count + 1
 
                     words = splitList(words, max_sentence_length)
                     tags = splitList(tags,max_sentence_length)
@@ -61,6 +61,8 @@ def parse_file(filename,max_sentence_length,splitting = False):
                     for i in range(0,len(words)):
                         out_sentences.write(" ".join(words[i]) + "\n")
                         out_tags.write(' '.join(str(x) for x in tags[i]) + "\n")
+                        sentence_dict[len(words[i])] = sentence_dict[len(words[i])] + 1
+                        count = count + 1
 
             words = []
             tags = []
@@ -89,4 +91,4 @@ def parse_file(filename,max_sentence_length,splitting = False):
 
 
 for file in filenames:
-    parse_file(file,max_sentence_length=40, splitting=True)
+    parse_file(file,max_sentence_length=50, splitting=False)
