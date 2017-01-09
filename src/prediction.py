@@ -9,6 +9,9 @@ from keras.preprocessing.text import text_to_word_sequence
 import numpy as np
 import sys
 
+num_words = 361236
+
+
 def no_filter():
     f = '\t\n'
     return f
@@ -48,7 +51,32 @@ def load_dataset(path, interp = True):
     return x_train, y_train
 
 #x_train, y_train = load_dataset('../data/korpus/train/', interp = True)
-num_words = 361236
+def preprocess_data(sentence):
+    x = one_hot(sentence, num_words, filters=no_filter())
+    x = x[:model_sentence_length]
+    sentence_length = abs(model_sentence_length - len(x))
+    x = [x]
+    x = sequence.pad_sequences(x, model_sentence_length)
+    return x, sentence_length
+
+def get_predictions(predictions):
+    predicted = []
+    for sent in predictions:
+        for word in range(0, len(sent)):  # len(sent)-x_len,len(sent)):
+            # print (word)
+            idx = sent[word].tolist().index(max(sent[word]))
+            predicted.append(idx)
+            #  print (sent[word])
+    print(predicted)
+    return predicted
+
+def print_predictions(predicted):
+    word_idx = 0
+    if sent[word_idx] == ' ':
+        word_idx = word_idx + 1
+    for i in range(sentence_length, model_sentence_length):
+        print(sent[word_idx] + ' ' + str(predicted[i]) + " " + map[predicted[i]])
+        word_idx = word_idx + 1
 
 model = load_model('test2.h5')
 wocab = [
@@ -69,37 +97,27 @@ x = range(1,13)
 y = ['0','A','C','D','I','J','N','P','V','R','T','X','Z']
 map = dict(zip(x, wocab))
 #sentence = input("Wpisz_zdanie\n")
-sentence = input("Wpisz zdanie: ")
-model_sentence_length = 45
-x = one_hot(sentence, num_words, filters = no_filter())
-#print(x)
-## = len(x)
-x=x[:model_sentence_length]
-sentence_length = abs(model_sentence_length - len(x))
-x = [x]
-x = sequence.pad_sequences(x, model_sentence_length)
+
+model_sentence_length = 50
+
+while True:
+    sentence = input("Wpisz zdanie: ")
+    x, sentence_length = preprocess_data(sentence)
+    predictions =  model.predict(x)
+    sent = sentence.split(' ')
+    predicted = get_predictions(predictions)
+    print_predictions(predicted)
+    print()
+
+
+
 #print(sentence)
 #print(x)
 
 #y = x
 
-predictions =  model.predict(x)
 
 
-predicted_idx = []
-for sent in predictions:
-    for word in range(0,len(sent)):#len(sent)-x_len,len(sent)):
-       # print (word)
-        idx = sent[word].tolist().index(max(sent[word]))
-        predicted_idx.append(idx)
-      #  print (sent[word])
 
-print (predicted_idx)
-sent = sentence.split(' ')
 
-word_idx = 0
-if sent[word_idx] == ' ':
-    word_idx = word_idx+1
-for i in range(sentence_length, model_sentence_length):
-    print(sent[word_idx] + ' ' + str(predicted_idx[i]) + " " + map[predicted_idx[i]])
-    word_idx = word_idx + 1
+
