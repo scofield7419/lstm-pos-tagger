@@ -1,6 +1,4 @@
-#DNN Morphological Guesser
-
-**Currently only POS Tagging**
+**Deep POS Tagger**
 
 **Model**: BLSTM Network
 
@@ -11,3 +9,9 @@
 **Model**: create_model.py
 
 **Prediction**: prediction.py
+
+**TODO:**
+Changing sentence input to word based input!
+Usage character embeddings instead of words embeddings or words embeddings + morphemes.
+Try other models.
+
